@@ -1,0 +1,1087 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processos e Threads — Apresentação Interativa</title>
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Anime.js para animações complexas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- JS Externo -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- Container de partículas para a explosão do Slide 1 (reposicionado para o body para alinhamento correto) -->
+  <div id="particles-container"></div>
+
+  <!-- Barra de Progresso Superior -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- Botões de Navegação e Auxiliares -->
+  <button class="fullscreen-btn" id="btn-fullscreen" title="Tela Cheia">⛶</button>
+  <button class="nav-btn nav-prev hidden" id="btn-prev" aria-label="Slide anterior">←</button>
+  <button class="nav-btn nav-next" id="btn-next" aria-label="Próximo slide">→</button>
+  <div class="slide-counter" id="slide-counter">1 / 13</div>
+
+  <!-- Container dos Slides -->
+  <div class="slides-container">
+
+    <!-- ----------------------------------------------------
+         SLIDE 1 — ABERTURA
+         ---------------------------------------------------- -->
+    <div class="slide active" id="slide-1">
+      <div class="slide1-wrapper">
+        <h2 class="slide1-title" id="slide1-main-title" style="font-family: var(--font-title); font-weight: 800;">O que acontece quando abrimos um programa?</h2>
+        
+        <div class="folder-container" id="opening-folder">
+          <svg width="240" height="200" viewBox="0 0 240 200" class="folder-svg" id="folder-svg-element">
+            <defs>
+              <filter id="folder-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+              </filter>
+              <linearGradient id="folder-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3B82F6" />
+                <stop offset="100%" stop-color="#1D4ED8" />
+              </linearGradient>
+              <linearGradient id="lid-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#60A5FA" />
+                <stop offset="100%" stop-color="#2563EB" />
+              </linearGradient>
+            </defs>
+            
+            <!-- Folder Back Flap -->
+            <path d="M15,40 L95,40 L115,60 L225,60 C230,60 235,64 235,69 L235,175 C235,180 230,185 225,185 L15,185 C10,185 5,180 5,175 L5,50 C5,45 10,40 15,40 Z" fill="url(#folder-grad)" filter="url(#folder-shadow)" />
+            
+            <!-- Embedded Files / Content -->
+            <g id="folder-docs">
+              <rect x="30" y="45" width="180" height="110" rx="6" fill="#ffffff" filter="url(#folder-shadow)" />
+              <line x1="50" y1="70" x2="190" y2="70" stroke="#E2E8F0" stroke-width="5" stroke-linecap="round" />
+              <line x1="50" y1="90" x2="160" y2="90" stroke="#E2E8F0" stroke-width="5" stroke-linecap="round" />
+              <line x1="50" y1="110" x2="180" y2="110" stroke="#E2E8F0" stroke-width="5" stroke-linecap="round" />
+              <line x1="50" y1="130" x2="120" y2="130" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+            </g>
+            
+            <!-- Folder Front Lid -->
+            <path id="folder-lid" d="M5,75 L235,75 L235,178 C235,182 231,185 227,185 L13,185 C9,185 5,182 5,178 Z" fill="url(#lid-grad)" filter="url(#folder-shadow)" style="transform-origin: 5px 185px; transition: transform 0.6s var(--transition-smooth);" />
+          </svg>
+        </div>
+        
+        <div class="slide1-subtitle">duplo clique na pasta para abrir</div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 2 — O QUE É UM PROCESSO
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-2">
+      <h2 class="slide-title">O que é um Processo?</h2>
+      
+      <div class="grid-2" style="max-width: 1050px;">
+        <!-- Coluna Esquerda: Texto Sincronizado por Parágrafos -->
+        <div class="slide2-left s2-narrative">
+          <p class="s2-para" id="s2-para-1">
+            Um processo é muito mais do que um programa em execução. É uma abstração do sistema operacional — um ambiente isolado que o SO cria para hospedar a execução de um programa.
+          </p>
+          <p class="s2-para" id="s2-para-2">
+            Ao ser instanciado, o processo recebe um identificador único (PID), um espaço de memória próprio e começa com o estado PRONTO — aguardando sua vez de usar a CPU.
+          </p>
+          <p class="s2-para" id="s2-para-3">
+            Se ele falhar, apenas ele cai. O resto do sistema continua. Esse isolamento é a base da estabilidade de qualquer sistema operacional moderno.
+          </p>
+        </div>
+        
+        <!-- Coluna Direita: CPU & RAM SVG -->
+        <div class="slide2-right cpu-container-slide2">
+          <svg width="100%" height="360" viewBox="0 0 500 350" id="cpu-svg" style="overflow: visible;">
+            <defs>
+              <!-- Glow Filters -->
+              <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Connection Lines (Backdrop) -->
+            <path id="storage-to-cpu-path" d="M 60,175 L 250,175" fill="none" stroke="rgba(255, 255, 255, 0.05)" stroke-width="4" />
+            <path id="cpu-to-ram-path" d="M 250,175 L 440,175" fill="none" stroke="rgba(255, 255, 255, 0.05)" stroke-width="4" />
+
+            <!-- Animated Data flow line (dashed) -->
+            <path id="load-path" d="M 60,175 L 250,175" fill="none" stroke="var(--orange)" stroke-width="2" stroke-dasharray="8,4" opacity="0.3" />
+            <circle id="load-dot" r="5" fill="var(--orange)" opacity="0" filter="url(#glow-orange)" />
+
+            <!-- 1. Storage / Disk (SSD) -->
+            <g id="storage-group" transform="translate(60, 175)">
+              <rect x="-35" y="-55" width="70" height="110" rx="6" fill="#111" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <rect x="-28" y="-48" width="56" height="40" rx="3" fill="#1a1a1a" stroke="rgba(255,255,255,0.05)" />
+              <rect x="-20" y="-42" width="40" height="12" rx="1" fill="#222" stroke="rgba(249,115,22,0.3)" stroke-width="1" />
+              <rect x="-20" y="-26" width="40" height="12" rx="1" fill="#222" stroke="rgba(249,115,22,0.3)" stroke-width="1" />
+              <rect x="-15" y="5" width="30" height="25" rx="2" fill="#2d2d2d" stroke="rgba(255,255,255,0.1)" />
+              <text x="0" y="20" fill="rgba(255,255,255,0.5)" font-size="6" font-family="var(--font-code)" text-anchor="middle">SSD NVMe</text>
+              <text x="0" y="-62" fill="rgba(255,255,255,0.4)" font-size="9" font-family="var(--font-title)" font-weight="600" text-anchor="middle">DISCO (SSD)</text>
+              <text x="0" y="45" fill="var(--orange)" font-size="8" font-family="var(--font-code)" font-weight="600" text-anchor="middle">programa.exe</text>
+            </g>
+
+            <!-- 2. CPU / Processor -->
+            <g id="cpu-chip-group" transform="translate(250, 175)" style="transform-origin: 0px 0px;">
+              <g opacity="0.3" stroke="var(--blue)" stroke-width="1.5">
+                <line x1="-65" y1="-30" x2="-55" y2="-30" />
+                <line x1="-65" y1="0" x2="-55" y2="0" />
+                <line x1="-65" y1="30" x2="-55" y2="30" />
+                <line x1="65" y1="-30" x2="55" y2="-30" />
+                <line x1="65" y1="0" x2="55" y2="0" />
+                <line x1="65" y1="30" x2="55" y2="30" />
+                <line x1="-30" y1="-65" x2="-30" y2="-55" />
+                <line x1="0" y1="-65" x2="0" y2="-55" />
+                <line x1="30" y1="-65" x2="30" y2="-55" />
+                <line x1="-30" y1="65" x2="-30" y2="55" />
+                <line x1="0" y1="65" x2="0" y2="55" />
+                <line x1="30" y1="65" x2="30" y2="55" />
+              </g>
+              <rect x="-55" y="-55" width="110" height="110" rx="10" fill="#151525" stroke="var(--blue)" stroke-width="2.5" id="cpu-rect" filter="url(#glow-blue)" />
+              <rect x="-25" y="-25" width="50" height="50" rx="4" fill="#0f0f1b" stroke="rgba(59,130,246,0.5)" stroke-width="1.5" />
+              <text x="0" y="5" fill="#93c5fd" font-size="11" font-family="var(--font-code)" font-weight="700" text-anchor="middle" letter-spacing="0.05em">CPU</text>
+              <text x="0" y="-62" fill="rgba(255,255,255,0.4)" font-size="9" font-family="var(--font-title)" font-weight="600" text-anchor="middle">PROCESSADOR</text>
+            </g>
+
+            <!-- 3. RAM Memory Module -->
+            <g id="ram-group" transform="translate(440, 175)">
+              <rect x="-25" y="-95" width="50" height="190" rx="4" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+              <rect x="-18" y="-90" width="36" height="180" rx="6" fill="#0c0d14" stroke="#334155" stroke-width="2" id="ram-rect" />
+              <g fill="#d97706" opacity="0.8">
+                <rect x="-16" y="-85" width="2" height="6" />
+                <rect x="-16" y="-75" width="2" height="6" />
+                <rect x="-16" y="-65" width="2" height="6" />
+                <rect x="-16" y="-55" width="2" height="6" />
+                <rect x="-16" y="-45" width="2" height="6" />
+                <rect x="-16" y="-35" width="2" height="6" />
+                <rect x="-16" y="-25" width="2" height="6" />
+                <rect x="-16" y="-15" width="2" height="6" />
+                <rect x="-16" y="-5" width="2" height="6" />
+                <rect x="-16" y="5" width="2" height="6" />
+                <rect x="-16" y="15" width="2" height="6" />
+                <rect x="-16" y="25" width="2" height="6" />
+                <rect x="-16" y="35" width="2" height="6" />
+                <rect x="-16" y="45" width="2" height="6" />
+                <rect x="-16" y="55" width="2" height="6" />
+                <rect x="-16" y="65" width="2" height="6" />
+                <rect x="-16" y="75" width="2" height="6" />
+                <rect x="-16" y="85" width="2" height="6" />
+              </g>
+              <rect x="-8" y="-70" width="16" height="24" rx="2" fill="#1b1c25" stroke="rgba(255,255,255,0.05)" />
+              <rect x="-8" y="-35" width="16" height="24" rx="2" fill="#1b1c25" stroke="rgba(255,255,255,0.05)" />
+              <rect x="-8" y="10" width="16" height="24" rx="2" fill="#1b1c25" stroke="rgba(255,255,255,0.05)" />
+              <rect x="-8" y="45" width="16" height="24" rx="2" fill="#1b1c25" stroke="rgba(255,255,255,0.05)" />
+              
+              <text x="0" y="-102" fill="rgba(255,255,255,0.4)" font-size="9" font-family="var(--font-title)" font-weight="600" text-anchor="middle">MEMÓRIA (RAM)</text>
+            </g>
+
+            <!-- 4. Process Envelope -->
+            <g id="process-envelope-container" style="transform: translate(250px, 175px) scale(0); transform-origin: 0px 0px;">
+              <g id="process-envelope-content">
+                <rect x="-45" y="-35" width="90" height="70" rx="8" fill="#0f2b5c" stroke="#3b82f6" stroke-width="2" id="env-rect" filter="url(#glow-blue)" />
+                <text x="-35" y="-15" class="process-env-text" id="env-pid">PID: 4821</text>
+                <text x="-35" y="2" class="process-env-text" id="env-mem">Mem: 64MB</text>
+                <text x="-35" y="19" class="process-env-text" id="env-state-lbl">Estado:</text>
+                <text x="12" y="19" class="process-env-state" id="env-state-val">PRONTO</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 3 — ZOOM E INDEPENDÊNCIA DAS THREADS
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-3">
+
+      <div id="slide3-real-content" style="opacity: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <h2 class="slide-title">Threads: Por Dentro de um Processo</h2>
+        
+        <div class="grid-2">
+          <!-- Lado Esquerdo: Textos -->
+          <div class="slide3-left">
+            <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify; margin-bottom: 1.25rem;">
+              Ao darmos um zoom no processo instanciado, descobrimos as <strong>threads</strong> (linhas de execução). Elas são os cozinheiros que realizam o trabalho de forma simultânea e assíncrona.
+            </p>
+            <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify; margin-bottom: 1rem;">
+              Enquanto cada thread detém sua própria pilha de chamadas e registradores locais, todas compartilham a mesma memória do processo pai (Heap e Código).
+            </p>
+            
+            <div id="slide3-status-box" class="callout" style="background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.1); min-height: 70px;">
+              <div class="callout-icon" id="slide3-status-icon" style="color: var(--blue);">✦</div>
+              <div class="callout-text" id="slide3-status-text">
+                Explore a concorrência das threads executando instruções de forma assíncrona e independente.
+              </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+              <button class="btn-sim" id="btn-slide3-demo" onclick="runThreadsIndependenceSim()">▶ Ver independência</button>
+            </div>
+          </div>
+
+          <!-- Lado Direito: Processo e Threads -->
+          <div class="slide3-right" style="display: flex; justify-content: center; align-items: center; width: 100%;">
+            <div class="process-box-large" id="s3-process-box">
+              <div class="process-box-header">PROCESSO PAI (PID: 4821) — Espaço de Endereçamento Isolado</div>
+              
+              <!-- Threads list -->
+              <div class="threads-container">
+                <!-- Thread 1 -->
+                <div class="thread-row" id="t3-row-1">
+                  <div class="thread-meta">
+                    <div class="mini-stack">
+                      <div class="stack-block" style="background: var(--blue); width: 100%; height: 8px;"></div>
+                      <div class="stack-block" style="background: var(--blue); width: 85%; height: 8px;"></div>
+                      <span class="stack-lbl">Pilha T1</span>
+                    </div>
+                    <div class="thread-circle" style="background: var(--blue);">T1</div>
+                  </div>
+                  <div class="thread-track">
+                    <div class="thread-line"></div>
+                    <div class="instruction-block" style="background: var(--blue); animation-delay: 0s;"></div>
+                    <div class="instruction-block" style="background: var(--blue); animation-delay: 0.7s;"></div>
+                  </div>
+                </div>
+
+                <!-- Thread 2 -->
+                <div class="thread-row" id="t3-row-2">
+                  <div class="thread-meta">
+                    <div class="mini-stack">
+                      <div class="stack-block" style="background: var(--purple); width: 100%; height: 8px;"></div>
+                      <div class="stack-block" style="background: var(--purple); width: 60%; height: 8px;"></div>
+                      <span class="stack-lbl">Pilha T2</span>
+                    </div>
+                    <div class="thread-circle" style="background: var(--purple);">
+                      T2
+                      <div class="thread-circle-pause">⏸</div>
+                    </div>
+                  </div>
+                  <div class="thread-track">
+                    <div class="thread-line"></div>
+                    <div class="instruction-block" style="background: var(--purple); animation-delay: 0.3s;"></div>
+                    <div class="instruction-block" style="background: var(--purple); animation-delay: 1.1s;"></div>
+                  </div>
+                </div>
+
+                <!-- Thread 3 -->
+                <div class="thread-row" id="t3-row-3">
+                  <div class="thread-meta">
+                    <div class="mini-stack">
+                      <div class="stack-block" style="background: var(--green); width: 100%; height: 8px;"></div>
+                      <div class="stack-block" style="background: var(--green); width: 75%; height: 8px;"></div>
+                      <span class="stack-lbl">Pilha T3</span>
+                    </div>
+                    <div class="thread-circle" style="background: var(--green);">T3</div>
+                  </div>
+                  <div class="thread-track">
+                    <div class="thread-line"></div>
+                    <div class="instruction-block" style="background: var(--green); animation-delay: 0.5s;"></div>
+                    <div class="instruction-block" style="background: var(--green); animation-delay: 1.5s;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shared resources at bottom -->
+              <div class="shared-blocks">
+                <div class="shared-block" id="s3-shared-heap">📦 HEAP Compartilhado (Objetos)</div>
+                <div class="shared-block" id="s3-shared-code">⚙️ CÓDIGO & DADOS Compartilhados</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 4 — ANATOMIA DO PROCESSO
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-4">
+      <h2 class="slide-title">Anatomia do Processo na Memória</h2>
+      <p class="slide-desc">O SO divide o espaço de endereçamento virtual de um processo em segmentos bem definidos e gerencia sua estrutura de controle através do PCB.</p>
+      
+      <div class="grid-2" style="position: relative; max-width: 1000px;">
+        <svg class="connector-svg"><path id="slide4-path" d="" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.6" /></svg>
+        
+        <!-- Coluna Esquerda: Estrutura da Memória -->
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+          <div class="memory-stack">
+            <div class="mem-layer layer-kernel" data-desc="Kernel Space: Área reservada de memória protegida e mapeada para funções do núcleo do sistema operacional. O processo comum de usuário não pode gravar ou ler diretamente aqui, necessitando de System Calls (chamadas de sistema) para interações de baixo nível (E/S, rede, etc.).">Kernel Space</div>
+            <div class="mem-layer layer-stack" data-desc="Stack (Pilha): Cresce de cima para baixo. Armazena variáveis locais de escopo de funções, parâmetros passados para chamadas internas e o endereço de retorno para onde a CPU deve voltar após concluir uma sub-rotina. Tem gerência de memória automática.">Stack (Pilha de Execução)</div>
+            <div class="mem-layer layer-free" data-desc="Espaço Livre: Zona de memória virtual disponível. À medida que a Pilha cresce para baixo e o Heap cresce para cima, eles consomem essa lacuna física disponível. Se ambos se colidirem, ocorre um estouro de memória.">Espaço Livre</div>
+            <div class="mem-layer layer-heap" data-desc="Heap (Pilha Dinâmica): Cresce de baixo para cima. Destinado à alocação manual e sob demanda de variáveis globais e objetos em tempo de execução (ex: usando malloc em C, ou new em Javascript). Deve ser desalocado pelo Garbage Collector ou manualmente.">Heap (Memória Dinâmica)</div>
+            <div class="mem-layer layer-code" data-desc="Code & Data Segments: Segmento estático e de leitura que abriga o código compilado em instruções de máquina (binário) e as constantes de inicialização. Geralmente é compartilhado entre processos que rodam o mesmo executável para economizar memória física.">Código e Dados</div>
+          </div>
+          
+          <div class="tooltip-box" id="mem-tooltip">
+            Passe o mouse por cima de qualquer bloco de memória para entender o seu papel na execução.
+          </div>
+        </div>
+        
+        <!-- Coluna Direita: PCB -->
+        <div style="display: flex; justify-content: center; width: 100%;">
+          <div class="pcb-container" id="pcb-card">
+            <div class="pcb-title">Process Control Block (PCB)</div>
+            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 1rem; line-height: 1.45;">O PCB é o registro central que o SO mantém para gerenciar os metadados críticos de cada processo:</div>
+            
+            <div class="pcb-field"><span class="pcb-label">ID do Processo:</span><span class="pcb-value">PID: 4821</span></div>
+            <div class="pcb-field"><span class="pcb-label">Estado Atual:</span><span class="pcb-value" style="color: var(--orange); font-weight: bold;">EXECUTANDO</span></div>
+            <div class="pcb-field"><span class="pcb-label">Contador Prog. (PC):</span><span class="pcb-value">0x00FF4A12</span></div>
+            <div class="pcb-field"><span class="pcb-label">Registradores CPU:</span><span class="pcb-value">EAX, EBX, ESP...</span></div>
+            <div class="pcb-field"><span class="pcb-label">Limites de Memória:</span><span class="pcb-value">0x0000 - 0x7FFF</span></div>
+            <div class="pcb-field"><span class="pcb-label">Arquivos Abertos:</span><span class="pcb-value">stdin, stdout, log.txt</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 5 — COMPARATIVO PROCESSO VS THREAD
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-5">
+      <h2 class="slide-title">Processos vs Threads</h2>
+      <p class="slide-desc">Embora ambos representem fluxos de execução, os custos operacionais e o isolamento de recursos diferem drasticamente.</p>
+      
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">Característica</th>
+            <th class="col-process" style="width: 40%; color: var(--blue);">Processo (Pai)</th>
+            <th class="col-thread" style="width: 40%; color: var(--purple);">Thread (Filho)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-row">
+            <td><strong>Isolamento</strong></td>
+            <td class="text-success">Total (Memória própria isolada)</td>
+            <td class="text-danger">Compartilhado (Célula comum de memória)</td>
+          </tr>
+          <tr class="table-row">
+            <td><strong>Custo de Criação</strong></td>
+            <td class="text-danger">Muito Alto (Duplica tabelas, copia arquivos)</td>
+            <td class="text-success">Muito Baixo (Apenas pilha e registradores)</td>
+          </tr>
+          <tr class="table-row">
+            <td><strong>Troca de Contexto</strong></td>
+            <td class="text-danger">Lenta (Muda espaço virtual da CPU)</td>
+            <td class="text-success">Rápida (Mantém o mesmo espaço de memória)</td>
+          </tr>
+          <tr class="table-row">
+            <td><strong>Comunicação (IPC)</strong></td>
+            <td class="text-danger">Complexa (Sockets, Sinais, Pipes)</td>
+            <td class="text-success">Direta (Gravação direta em variáveis comuns)</td>
+          </tr>
+          <tr class="table-row">
+            <td><strong>Falhas (Crash)</strong></td>
+            <td class="text-success">Isolada (Se cair, os outros continuam)</td>
+            <td class="text-danger">Grave (Se uma thread capotar, o processo morre)</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="slide5-footer-text text-danger" style="margin-top: 1.5rem; font-weight: 500;">
+        ⚠ Cuidado: O compartilhamento de memória nas threads traz agilidade, mas abre margem para erros graves como Race Conditions.
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 6 — CICLO DE VIDA DO PROCESSO
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-6">
+      <h2 class="slide-title">Ciclo de Vida do Processo</h2>
+      <p class="slide-desc">O SO gerencia transições dinâmicas de estados à medida que o processo consome CPU ou aguarda recursos de hardware.</p>
+      
+      <div class="lifecycle-wrapper">
+        <!-- SVG Diagrama à Esquerda -->
+        <div class="lifecycle-svg-container">
+          <svg width="740" height="420" viewBox="0 0 740 420" id="lifecycle-diagram" style="overflow: visible;">
+            <defs>
+              <marker id="lf-arrow" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="rgba(255,255,255,0.4)" />
+              </marker>
+            </defs>
+
+            <!-- Linhas de Transição -->
+            <path id="path-novo-pronto" d="M 80,200 C 130,120 180,120 250,120" class="lifecycle-line" />
+            <path id="path-pronto-exec" d="M 250,120 L 450,120" class="lifecycle-line" />
+            <path id="path-exec-pronto" d="M 450,120 Q 350,70 250,120" class="lifecycle-line" />
+            <path id="path-exec-bloq" d="M 450,120 C 420,230 380,250 350,280" class="lifecycle-line" />
+            <path id="path-bloq-pronto" d="M 350,280 C 310,250 280,230 250,120" class="lifecycle-line" />
+            <path id="path-exec-term" d="M 450,120 C 520,120 580,120 680,200" class="lifecycle-line" />
+
+            <!-- Círculos dos Estados -->
+            <circle id="node-NOVO" cx="80" cy="200" r="40" stroke="var(--purple)" stroke-width="2" class="node-circle" onclick="userSelectLifecycleNode('NOVO')" />
+            <text x="80" y="200" class="node-text">NOVO</text>
+
+            <circle id="node-PRONTO" cx="250" cy="120" r="40" stroke="var(--yellow)" stroke-width="2" class="node-circle" onclick="userSelectLifecycleNode('PRONTO')" />
+            <text x="250" y="120" class="node-text">PRONTO</text>
+
+            <circle id="node-EXECUTANDO" cx="450" cy="120" r="40" stroke="var(--blue)" stroke-width="2" class="node-circle" onclick="userSelectLifecycleNode('EXECUTANDO')" />
+            <text x="450" y="120" class="node-text">EXEC.</text>
+
+            <circle id="node-BLOQUEADO" cx="350" cy="280" r="40" stroke="var(--red)" stroke-width="2" class="node-circle" onclick="userSelectLifecycleNode('BLOQUEADO')" />
+            <text x="350" y="280" class="node-text">BLOQ.</text>
+
+            <circle id="node-TERMINADO" cx="680" cy="200" r="40" stroke="var(--green)" stroke-width="2" class="node-circle" onclick="userSelectLifecycleNode('TERMINADO')" />
+            <text x="680" y="200" class="node-text">TERM.</text>
+
+            <!-- Processo Fantasma Animado -->
+            <circle id="ghost-process" cx="80" cy="200" r="10" fill="var(--orange)" opacity="0" style="pointer-events: none; filter: drop-shadow(0 0 8px var(--orange));" />
+          </svg>
+        </div>
+
+        <!-- Painel Informativo à Direita -->
+        <div class="lifecycle-side-panel">
+          <div class="lifecycle-info-card">
+            <h3 class="lifecycle-info-title" id="lifecycle-title">Selecione um Estado</h3>
+            <p class="lifecycle-info-desc" id="lifecycle-desc">
+              Clique nos círculos do diagrama de estados ou espere a simulação automática do processo fantasma iniciar para entender a transição operacional de cada estado do ciclo de vida.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 7 — CONCORRÊNCIA E RACE CONDITION
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-7">
+      <h2 class="slide-title">Concorrência e Race Condition (Condição de Corrida)</h2>
+      <p class="slide-desc">Quando duas threads leem e escrevem em uma mesma variável compartilhada sem sincronização, a consistência dos dados é perdida.</p>
+      
+      <div class="grid-2" style="max-width: 1050px;">
+        <!-- Simulador Visual -->
+        <div class="glass-card simulator-card">
+          <h3 style="font-family: var(--font-title); font-size: 1.15rem; color: #fff; margin-bottom: 0.5rem;">Cenário: Saque Simultâneo de R$ 500</h3>
+          
+          <div class="sim-elements">
+            <!-- Thread A -->
+            <div class="sim-thread-box" id="sim-ta" style="border-color: var(--blue);">
+              <span style="color: var(--blue);">Thread A (Saque)</span>
+              <span class="sim-local-val" id="sim-ta-val">local: --</span>
+            </div>
+
+            <!-- Recurso Compartilhado (Saldo) -->
+            <div class="sim-balance-box" id="sim-bal">
+              <span class="sim-balance-lbl">Saldo Bancário</span>
+              <span class="sim-balance-val" id="sim-bal-val">R$ 1.000</span>
+            </div>
+
+            <!-- Thread B -->
+            <div class="sim-thread-box" id="sim-tb" style="border-color: var(--purple);">
+              <span style="color: var(--purple);">Thread B (Saque)</span>
+              <span class="sim-local-val" id="sim-tb-val">local: --</span>
+            </div>
+
+            <!-- Linhas de Ação SVG -->
+            <svg class="connector-svg" style="z-index: 1;">
+              <path id="line-ta-bal" d="M 130,220 C 180,220 180,220 235,220" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2.5" />
+              <path id="line-tb-bal" d="M 570,220 C 520,220 520,220 465,220" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2.5" />
+            </svg>
+          </div>
+
+          <div class="sim-log" id="sim-log">
+            <span id="sim-log-text">Pressione Simular para ver a colisão de gravação em tempo real.</span>
+          </div>
+
+          <div class="sim-controls">
+            <button class="btn-sim" id="btn-start-sim" onclick="runRaceConditionSim()">▶ Simular Race Condition</button>
+            <button class="btn-sim btn-sim-secondary" onclick="resetRaceConditionSim()">Reset</button>
+          </div>
+        </div>
+
+        <!-- Painel Explicativo Sincronizado -->
+        <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+          <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify; margin-bottom: 1.5rem;">
+            O saldo inicial da conta bancária é de <strong>R$ 1.000</strong>. Duas requisições paralelas (Thread A e B) tentam realizar um saque de R$ 500 simultaneamente.
+          </p>
+          <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify; margin-bottom: 1.5rem;">
+            Ambas leem o valor original de <strong>R$ 1.000</strong> antes de qualquer gravação. Ao calcularem a subtração localmente, gravam consecutivamente o saldo de <strong>R$ 500</strong>.
+          </p>
+
+          <div class="sim-explanation-panel" id="sim-explanation">
+            <div class="callout" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+              <div class="callout-icon" style="color: var(--red);">🚨</div>
+              <div class="callout-text" style="color: rgba(255,255,255,0.9);">
+                <strong>Erro de Sincronia:</strong> O banco perdeu R$ 500! A conta deveria possuir saldo zerado, mas as gravações sobrepostas invalidaram a consistência dos dados.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 8 — TRÊS PROBLEMAS DE CONCORRÊNCIA
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-8">
+      <h2 class="slide-title">Desafios da Programação Concorrente</h2>
+      <p class="slide-desc">A falta de ordenamento na execução assíncrona causa três tipos clássicos de erros críticos em sistemas. Clique nos cartões para revelar a descrição detalhada de cada problema.</p>
+      
+      <div class="problems-grid">
+        <!-- Problema 1 -->
+        <div class="card-3d card-problem-1" onclick="this.classList.toggle('flipped')">
+          <div class="card-3d-inner">
+            <div class="card-front">
+              <div class="card-icon">⚡</div>
+              <h3>Condição de Corrida</h3>
+              <p style="font-size:0.82rem; opacity:0.6; margin-top:5px;">(Race Condition)</p>
+            </div>
+            <div class="card-back">
+              O resultado final da execução depende da ordem em que as threads executam suas tarefas. Seus efeitos causam perda de dados, corrupção de variáveis de controle e instabilidades imprevisíveis.
+            </div>
+          </div>
+        </div>
+
+        <!-- Problema 2 -->
+        <div class="card-3d card-problem-2" onclick="this.classList.toggle('flipped')">
+          <div class="card-3d-inner">
+            <div class="card-front">
+              <div class="card-icon">💀</div>
+              <h3>Deadlock</h3>
+              <p style="font-size:0.82rem; opacity:0.6; margin-top:5px;">(Bloqueio Mútuo)</p>
+            </div>
+            <div class="card-back">
+              Duas ou mais threads ficam travadas permanentemente, cada uma esperando pela liberação de um recurso retido pela outra. É o congelamento completo de trechos do sistema de software.
+            </div>
+          </div>
+        </div>
+
+        <!-- Problema 3 -->
+        <div class="card-3d card-problem-3" onclick="this.classList.toggle('flipped')">
+          <div class="card-3d-inner">
+            <div class="card-front">
+              <div class="card-icon">⏳</div>
+              <h3>Starvation</h3>
+              <p style="font-size:0.82rem; opacity:0.6; margin-top:5px;">(Inanição)</p>
+            </div>
+            <div class="card-back">
+              Uma thread é indefinidamente impedida de prosseguir sua execução porque o escalonador do SO prioriza repetidamente outras threads. A thread "morre de fome" por recursos de CPU.
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="slide8-footer-text" id="slide8-footer">
+        Para solucionar essas anomalias, desenvolvedores usam primitivas de sincronização, como <strong>Mutexes</strong> e <strong>Semáforos</strong>.
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 9 — DEADLOCK: QUANDO TUDO PARA
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-9">
+      <h2 class="slide-title" style="color: var(--red);">Deadlock: O Congelamento Completo</h2>
+      
+      <div class="grid-2" style="max-width: 1050px;">
+        <!-- Coluna Esquerda: As Condições de Coffman -->
+        <div class="slide9-left">
+          <h3 style="font-family: var(--font-title); font-size: 1.4rem; color: #fff; margin-bottom: 1.25rem;">As 4 Condições de Coffman</h3>
+          <p style="font-size: 1rem; line-height: 1.6; color: rgba(255,255,255,0.75); margin-bottom: 1.5rem; text-align: justify;">
+            Um deadlock **só ocorre** se as quatro condições abaixo forem atendidas simultaneamente no sistema. Clique em cada uma para expandir:
+          </p>
+          
+          <div class="coffman-list">
+            <!-- Item 1 -->
+            <div class="coffman-item" onclick="toggleCoffman(this)">
+              <div class="coffman-header">
+                <span>1. Exclusão Mútua</span>
+                <span class="coffman-arrow">▶</span>
+              </div>
+              <div class="coffman-content">
+                Pelo menos um recurso deve ser mantido em modo não compartilhado. Apenas uma thread pode usá-lo por vez.
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="coffman-item" onclick="toggleCoffman(this)">
+              <div class="coffman-header">
+                <span>2. Posse e Espera (Hold and Wait)</span>
+                <span class="coffman-arrow">▶</span>
+              </div>
+              <div class="coffman-content">
+                Uma thread retém a posse de um recurso já alocado enquanto aguarda a liberação de novos recursos adicionais.
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="coffman-item" onclick="toggleCoffman(this)">
+              <div class="coffman-header">
+                <span>3. Não Preempção</span>
+                <span class="coffman-arrow">▶</span>
+              </div>
+              <div class="coffman-content">
+                Recursos não podem ser forçadamente tomados de uma thread. Devem ser liberados voluntariamente por quem os detém.
+              </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="coffman-item" onclick="toggleCoffman(this)">
+              <div class="coffman-header">
+                <span>4. Espera Circular</span>
+                <span class="coffman-arrow">▶</span>
+              </div>
+              <div class="coffman-content">
+                Existe uma cadeia circular de threads, onde cada uma aguarda por um recurso retido pela thread seguinte na cadeia.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Imagem de tráfego analógica -->
+        <div class="stove-container" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+          <div style="width: 100%; max-width: 440px; background: rgba(239, 68, 68, 0.02); border: 1.5px dashed rgba(239, 68, 68, 0.2); border-radius: 16px; padding: 2.25rem;">
+            <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🚗⚡🚙</div>
+            <h4 style="font-family: var(--font-title); font-size: 1.25rem; color: var(--red); margin-bottom: 0.75rem; text-align: center;">Analogia do Cruzamento</h4>
+            <p style="font-size: 1.05rem; line-height: 1.6; color: rgba(255,255,255,0.85); text-align: justify;">
+              Imagine quatro carros que se encontram em um cruzamento de pista única simultaneamente.
+            </p>
+            <p style="font-size: 1.05rem; line-height: 1.6; color: rgba(255,255,255,0.85); text-align: justify; margin-top: 8px;">
+              Cada carro ocupa um quadrante e precisa do quadrante à frente (ocupado por outro carro) para avançar. Ninguém pode andar, e nenhum motorista quer dar ré. O trânsito para de forma definitiva.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 10 — FILÓSOFOS À MESA
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-10">
+      <h2 class="slide-title">O Jantar dos Filósofos (Dijkstra)</h2>
+      <p class="slide-desc">O clássico problema acadêmico ilustrando o deadlock por espera circular na disputa por múltiplos recursos.</p>
+      
+      <div class="philosophers-wrapper">
+        <!-- SVG Mesa de Jantar à Esquerda -->
+        <div class="table-svg-container" id="philo-table-container">
+          <svg width="450" height="420" viewBox="0 0 500 500" style="overflow: visible;" id="table-svg">
+            <!-- A Mesa Principal -->
+            <circle cx="250" cy="250" r="120" fill="#202030" stroke="rgba(255,255,255,0.1)" stroke-width="3" />
+            <text x="250" y="250" fill="rgba(255,255,255,0.2)" font-size="14" font-family="var(--font-title)" font-weight="bold" text-anchor="middle" dominant-baseline="central">MESA DE DIJKSTRA</text>
+
+            <!-- Garfos (Linhas em repouso apontando pro centro a partir de ângulos intermediários) -->
+            <!-- f1 (entre Filo 0 e Filo 1) -->
+            <line id="fork-1" x1="250" y1="250" x2="326" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="4" class="fork-line" />
+            <!-- f2 (entre Filo 1 e Filo 2) -->
+            <line id="fork-2" x1="250" y1="250" x2="374" y2="290" stroke="rgba(255,255,255,0.4)" stroke-width="4" class="fork-line" />
+            <!-- f3 (entre Filo 2 e Filo 3) -->
+            <line id="fork-3" x1="250" y1="250" x2="250" y2="380" stroke="rgba(255,255,255,0.4)" stroke-width="4" class="fork-line" />
+            <!-- f4 (entre Filo 3 e Filo 4) -->
+            <line id="fork-4" x1="250" y1="250" x2="126" y2="290" stroke="rgba(255,255,255,0.4)" stroke-width="4" class="fork-line" />
+            <!-- f5 (entre Filo 4 e Filo 0) -->
+            <line id="fork-5" x1="250" y1="250" x2="174" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="4" class="fork-line" />
+
+            <!-- Filósofos (P1 a P5) posicionados perfeitamente em pentágono -->
+            <!-- Filósofo 0 (topo) -->
+            <circle id="node-P0" cx="250" cy="80" r="24" fill="var(--gray-dark)" stroke="var(--orange)" stroke-width="2" class="philo-circle" />
+            <text x="250" y="80" class="philo-lbl">P1</text>
+
+            <!-- Filósofo 1 (direita-topo) -->
+            <circle id="node-P1" cx="412" cy="198" r="24" fill="var(--gray-dark)" stroke="var(--blue)" stroke-width="2" class="philo-circle" />
+            <text x="412" y="198" class="philo-lbl">P2</text>
+
+            <!-- Filósofo 2 (direita-baixo) -->
+            <circle id="node-P2" cx="350" cy="388" r="24" fill="var(--gray-dark)" stroke="var(--purple)" stroke-width="2" class="philo-circle" />
+            <text x="350" y="388" class="philo-lbl">P3</text>
+
+            <!-- Filósofo 3 (esquerda-baixo) -->
+            <circle id="node-P3" cx="150" cy="388" r="24" fill="var(--gray-dark)" stroke="var(--green)" stroke-width="2" class="philo-circle" />
+            <text x="150" y="388" class="philo-lbl">P4</text>
+
+            <!-- Filósofo 4 (esquerda-topo) -->
+            <circle id="node-P4" cx="88" cy="198" r="24" fill="var(--gray-dark)" stroke="var(--yellow)" stroke-width="2" class="philo-circle" />
+            <text x="88" y="198" class="philo-lbl">P5</text>
+
+            <!-- Setas de Espera de Bloqueio Mútuo -->
+            <g id="wait-arrows-group"></g>
+
+            <!-- Texto de Status Central -->
+            <text x="250" y="250" class="deadlock-status-txt" id="philo-status-text">DEADLOCK!</text>
+          </svg>
+        </div>
+
+        <!-- Descrição e Controles à Direita -->
+        <div class="philosophers-desc-box">
+          <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify;">
+            Cinco filósofos estão sentados à mesa. Cada um passa a vida pensando ou comendo. Para comer, necessitam usar o garfo à sua esquerda e o garfo à sua direita.
+          </p>
+          <p style="font-size: 1.1rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: justify;">
+            Se todos ficarem famintos ao mesmo tempo e cada um pegar **imediatamente o garfo à sua esquerda**, nenhum garfo sobrará na mesa. Todos seguram um garfo e esperam pelo outro eternamente.
+          </p>
+          
+          <div style="margin-top: 1rem;">
+            <button class="btn-sim" id="btn-philo-sim" onclick="runPhilosophersSim()">▶ Simular Impasse Mútuo</button>
+            <button class="btn-sim btn-sim-secondary" onclick="resetPhilosophersSim()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 11 — DEADLOCK NO CÓDIGO
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-11">
+      <h2 class="slide-title">Deadlock no Código Fonte</h2>
+      <p class="slide-desc">O impasse ocorre quando duas threads requisitam os mesmos mutexes/locks em ordens invertidas.</p>
+      
+      <div class="code-grid">
+        <!-- Thread A Code Block -->
+        <div class="code-box">
+          <div class="code-box-header"><span>THREAD A</span><span>lock_order_1</span></div>
+          <span class="code-line"><span class="lock-c">lock</span>(mutex_1); <span class="cmt-c">// Conseguiu</span></span>
+          <span class="code-line"><span class="lock-c">lock</span>(mutex_2); <span class="cmt-c">// AGUARDANDO mutex_2</span></span>
+          <span class="code-line" style="margin-top:8px;"><span class="cmt-c">// SEÇÃO CRÍTICA</span></span>
+          <span class="code-line">saldo -= 500;</span>
+          <span class="code-line"><span class="lock-c">unlock</span>(mutex_2);</span>
+          <span class="code-line"><span class="lock-c">unlock</span>(mutex_1);</span>
+        </div>
+
+        <!-- Thread B Code Block -->
+        <div class="code-box">
+          <div class="code-box-header"><span>THREAD B</span><span>lock_order_2</span></div>
+          <span class="code-line"><span class="lock-c">lock</span>(mutex_2); <span class="cmt-c">// Conseguiu</span></span>
+          <span class="code-line"><span class="lock-c">lock</span>(mutex_1); <span class="cmt-c">// AGUARDANDO mutex_1</span></span>
+          <span class="code-line" style="margin-top:8px;"><span class="cmt-c">// SEÇÃO CRÍTICA</span></span>
+          <span class="code-line">saldo -= 500;</span>
+          <span class="code-line"><span class="lock-c">unlock</span>(mutex_1);</span>
+          <span class="code-line"><span class="lock-c">unlock</span>(mutex_2);</span>
+        </div>
+
+        <!-- SVG Cruzamento Deadlock Conector -->
+        <svg class="code-connector-overlay" id="code-connector-svg">
+          <defs>
+            <marker id="red-arr-code" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="var(--red)" />
+            </marker>
+          </defs>
+          <g id="code-deadlock-line" style="opacity: 0; transition: opacity 400ms;">
+            <!-- Seta A -> B (Thread A espera Mutex 2 pego pela Thread B) -->
+            <path id="path-code-a-to-b" fill="none" stroke="var(--red)" stroke-width="2" marker-end="url(#red-arr-code)" />
+            <!-- Seta B -> A (Thread B espera Mutex 1 pego pela Thread A) -->
+            <path id="path-code-b-to-a" fill="none" stroke="var(--red)" stroke-width="2" marker-end="url(#red-arr-code)" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="slide11-footer-text" id="slide11-footer">
+        <span class="flash-midnight">⚠ EXECUÇÃO CONGELADA PERMANENTEMENTE ⚠</span>
+        <br />
+        <span style="font-size:0.9rem; opacity:0.65; margin-top:5px; display:inline-block;">Thread A retém Mutex 1 e espera Mutex 2. Thread B retém Mutex 2 e espera Mutex 1.</span>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 12 — COMO TRATAR DEADLOCK
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-12">
+      <h2 class="slide-title">Estratégias de Tratamento de Deadlock</h2>
+      <p class="slide-desc">Como o SO e os desenvolvedores impedem que impasses circulares travem o ambiente operacional.</p>
+      
+      <div class="grid-2x2">
+        <!-- Estratégia 1 -->
+        <div class="treatment-card">
+          <div class="treatment-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="treatment-info">
+            <h3>1. Prevenção (Locks Ordenados)</h3>
+            <p>Impor regras rígidas no código para garantir que todas as threads solicitem locks exatamente na mesma ordem de identificação (ex: sempre lock mutex_1 antes de mutex_2). Isso impossibilita matematicamente a formação de ciclos.</p>
+          </div>
+        </div>
+
+        <!-- Estratégia 2 -->
+        <div class="treatment-card">
+          <div class="treatment-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="treatment-info">
+            <h3>2. Evitar (Locks com Timeout)</h3>
+            <p>Usar primitivas de travamento não bloqueantes permanentes, como <code>pthread_mutex_trylock</code> ou timeouts explícitos. Se uma thread não conseguir a trava após um período, ela desiste, solta seus próprios locks e tenta novamente mais tarde.</p>
+          </div>
+        </div>
+
+        <!-- Estratégia 3 -->
+        <div class="treatment-card">
+          <div class="treatment-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="treatment-info">
+            <h3>3. Detecção e Recuperação</h3>
+            <p>O SO mantém internamente um Grafo de Alocação de Recursos (RAG). Periodicamente, algoritmos rodam buscando ciclos no grafo. Ao achar, o SO intervém abortando o processo culpado ou forçando a preempção de recursos.</p>
+          </div>
+        </div>
+
+        <!-- Estratégia 4 -->
+        <div class="treatment-card">
+          <div class="treatment-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="treatment-info">
+            <h3>4. Ostrich Algorithm (Avestruz)</h3>
+            <p>Ignorar completamente. Em sistemas operacionais de uso geral (Windows, Linux), o custo de travar e monitorar deadlocks o tempo todo é maior que lidar com o reset esporádico do usuário. É a abordagem padrão.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------
+         SLIDE 13 — TIMELINE FINAL
+         ---------------------------------------------------- -->
+    <div class="slide" id="slide-13">
+      <h2 class="slide-title" id="s13-title-main" style="transition: opacity 600ms; margin-bottom: 1rem;">A Grande Orquestra do Sistema Operacional</h2>
+      
+      <!-- Linha do Tempo e Partícula -->
+      <div class="particle-timeline-container">
+        
+        <!-- Cenas dos Nós -->
+        <div class="scene-container">
+          <!-- CENA 1: Clique do usuário -->
+          <div class="node-scene" id="scene-1" style="left: 6%;">
+            <div class="scene-title">1. Clique Inicial</div>
+            <div class="scene-visual">
+              <!-- Ícone programa e cursor mouse -->
+              <svg width="60" height="60" viewBox="0 0 60 60" style="overflow: visible;">
+                <g id="scene1-prog" class="vibrate-program" style="transform-origin: 30px 30px;">
+                  <rect x="15" y="10" width="30" height="40" rx="4" fill="#1e1e1e" stroke="var(--orange)" stroke-width="2" />
+                  <line x1="22" y1="20" x2="38" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                  <line x1="22" y1="30" x2="32" y2="30" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                </g>
+                <!-- Cursor mouse -->
+                <path d="M 40,35 L 30,42 L 32,48 L 28,49 L 26,43 L 22,46 L 22,25 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" id="scene1-cursor" style="transform: translate(0px, 0px);" />
+              </svg>
+            </div>
+            <div class="scene-desc">O usuário inicia a chamada de sistema clicando no programa executável estático.</div>
+          </div>
+
+          <!-- CENA 2: Processo Criado -->
+          <div class="node-scene" id="scene-2" style="left: 17%;">
+            <div class="scene-title">2. Processo Criado</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <rect x="5" y="15" width="30" height="30" rx="4" fill="#1a1a2e" stroke="var(--blue)" stroke-width="1.5" />
+                <text x="20" y="34" fill="#fff" font-size="8" text-anchor="middle" font-family="var(--font-code)">CPU</text>
+                
+                <!-- Faísca e envelope -->
+                <g id="scene2-env" style="transform: scale(0); transform-origin: 55px 30px;">
+                  <rect x="42" y="15" width="32" height="24" rx="3" fill="#0f3460" stroke="#60a5fa" stroke-width="1" />
+                  <text x="58" y="29" fill="#fff" font-size="6" text-anchor="middle" font-family="var(--font-code)">PID: 4821</text>
+                </g>
+              </svg>
+            </div>
+            <div class="scene-desc">O SO cria um ambiente virtual isolado, gerando um PID e alocando memória própria.</div>
+          </div>
+
+          <!-- CENA 3: Threads Lançadas -->
+          <div class="node-scene" id="scene-3" style="left: 28%;">
+            <div class="scene-title">3. Threads Lançadas</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <rect x="5" y="10" width="70" height="40" rx="5" fill="rgba(10,10,26,0.6)" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="3,2" />
+                <!-- Threads roots growing -->
+                <path id="s3-t1" d="M 20,45 L 20,20" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-dasharray="30" stroke-dashoffset="30" />
+                <path id="s3-t2" d="M 40,45 L 40,15" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-dasharray="35" stroke-dashoffset="35" />
+                <path id="s3-t3" d="M 60,45 L 60,25" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-dasharray="25" stroke-dashoffset="25" />
+                
+                <circle id="s3-c1" cx="20" cy="20" r="3" fill="var(--blue)" opacity="0" />
+                <circle id="s3-c2" cx="40" cy="15" r="3" fill="var(--purple)" opacity="0" />
+                <circle id="s3-c3" cx="60" cy="25" r="3" fill="var(--green)" opacity="0" />
+              </svg>
+            </div>
+            <div class="scene-desc">Para agilizar tarefas, o processo lança linhas internas de execução (threads).</div>
+          </div>
+
+          <!-- CENA 4: Concorrência ativa -->
+          <div class="node-scene" id="scene-4" style="left: 39%;">
+            <div class="scene-title">4. Concorrência Ativa</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <line x1="10" y1="18" x2="70" y2="18" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+                <line x1="10" y1="30" x2="70" y2="30" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+                <line x1="10" y1="42" x2="70" y2="42" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+                
+                <circle id="s4-b1" cx="10" cy="18" r="4" fill="var(--blue)" />
+                <circle id="s4-b2" cx="10" cy="30" r="4" fill="var(--purple)" />
+                <circle id="s4-b3" cx="10" cy="42" r="4" fill="var(--green)" />
+              </svg>
+            </div>
+            <div class="scene-desc">As threads rodam instruções simultaneamente, compartilhando a mesma memória.</div>
+          </div>
+
+          <!-- CENA 5: Recursos disputados -->
+          <div class="node-scene" id="scene-5" style="left: 50%;">
+            <div class="scene-title">5. Recursos Disputados</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <!-- RAM chips -->
+                <rect x="25" y="5" width="30" height="15" fill="#1a3a1a" stroke="#22c55e" stroke-width="1" />
+                <line x1="30" y1="20" x2="30" y2="23" stroke="#22c55e" stroke-width="1" />
+                <line x1="35" y1="20" x2="35" y2="23" stroke="#22c55e" stroke-width="1" />
+                <line x1="40" y1="20" x2="40" y2="23" stroke="#22c55e" stroke-width="1" />
+                <line x1="45" y1="20" x2="45" y2="23" stroke="#22c55e" stroke-width="1" />
+                <line x1="50" y1="20" x2="50" y2="23" stroke="#22c55e" stroke-width="1" />
+                
+                <!-- Convergencia -->
+                <circle id="s5-c1" cx="15" cy="45" r="4" fill="var(--blue)" />
+                <circle id="s5-c2" cx="40" cy="45" r="4" fill="var(--purple)" />
+                <circle id="s5-c3" cx="65" cy="45" r="4" fill="var(--green)" />
+                
+                <!-- Seta vermelha de disputa -->
+                <path id="s5-clash" d="M 28,26 Q 40,32 52,26" fill="none" stroke="var(--red)" stroke-width="1.5" opacity="0" marker-end="url(#arrow)" />
+                <text id="s5-clock" x="40" y="52" fill="var(--yellow)" font-size="10" text-anchor="middle" opacity="0">⏳</text>
+              </svg>
+            </div>
+            <div class="scene-desc">Diferentes threads tentam ler e gravar na mesma célula de memória comum ao mesmo tempo.</div>
+          </div>
+
+          <!-- CENA 6: Sincronização necessária -->
+          <div class="node-scene" id="scene-6" style="left: 61%;">
+            <div class="scene-title">6. Sincronização</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <rect x="25" y="5" width="30" height="15" fill="#1a3a1a" stroke="#22c55e" stroke-width="1" />
+                
+                <!-- Cadeado SVG -->
+                <g id="s6-lock" style="transform: translate(32px, 25px);">
+                  <rect x="2" y="6" width="12" height="9" rx="1.5" fill="var(--orange)" />
+                  <path id="s6-lock-shackle" d="M 4,6 L 4,3 A 4,4 0 0,1 12,3 L 12,6" fill="none" stroke="var(--orange)" stroke-width="1.5" style="transform: translateY(0px);" />
+                </g>
+                
+                <!-- Fila de bolinhas -->
+                <circle id="s6-c1" cx="12" cy="45" r="3.5" fill="var(--blue)" />
+                <circle id="s6-c2" cx="24" cy="45" r="3.5" fill="var(--purple)" />
+                <circle id="s6-c3" cx="36" cy="45" r="3.5" fill="var(--green)" />
+              </svg>
+            </div>
+            <div class="scene-desc">Trava (Mutex) fecha sobre o recurso e organiza as threads em uma fila de espera ordenada.</div>
+          </div>
+
+          <!-- CENA 7: Deadlock possível -->
+          <div class="node-scene" id="scene-7" style="left: 72%;">
+            <div class="scene-title" style="color: var(--red);">7. Risco de Deadlock</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <g id="s7-loop" class="spin-deadlock" style="transform-origin: 40px 30px;">
+                  <circle cx="40" cy="30" r="16" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="4,3" />
+                  <circle cx="24" cy="30" r="4.5" fill="var(--blue)" />
+                  <circle cx="56" cy="30" r="4.5" fill="var(--purple)" />
+                </g>
+                <text x="40" y="34" fill="var(--red)" font-size="12" text-anchor="middle" font-weight="bold">∞</text>
+              </svg>
+            </div>
+            <div class="scene-desc">Uma thread espera o lock da outra em um ciclo vicioso permanente de retenção cruzada.</div>
+          </div>
+
+          <!-- CENA 8: Estratégias aplicadas -->
+          <div class="node-scene" id="scene-8" style="left: 83%;">
+            <div class="scene-title">8. Salvaguarda</div>
+            <div class="scene-visual">
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;">
+                <g id="s8-loop" style="transform-origin: 40px 30px;">
+                  <circle cx="40" cy="30" r="16" fill="none" stroke="var(--red)" stroke-width="1" stroke-dasharray="4,3" opacity="0.3" />
+                  <circle id="s8-b1" cx="15" cy="30" r="4.5" fill="var(--blue)" />
+                  <circle id="s8-b2" cx="65" cy="30" r="4.5" fill="var(--purple)" />
+                </g>
+                
+                <!-- Slash de corte -->
+                <line id="s8-slash" x1="25" y1="45" x2="55" y2="15" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" style="transform: scale(0); transform-origin: 40px 30px;" />
+                <!-- Escudo verde -->
+                <path id="s8-shield" d="M 32,24 L 40,20 L 48,24 L 48,32 Q 40,40 32,32 Z" fill="var(--green)" opacity="0" />
+              </svg>
+            </div>
+            <div class="scene-desc">O SO intervém impondo ordem na aquisição de travas ou quebrando o ciclo para restaurar a ordem.</div>
+          </div>
+
+          <!-- CENA 9: Sistema estável -->
+          <div class="node-scene" id="scene-9" style="left: 94%;">
+            <div class="scene-title" style="color: var(--green);">9. Sistema Estável</div>
+            <div class="scene-visual" id="s9-visual-burst">
+              <!-- Burst de partículas menores -->
+              <svg width="80" height="60" viewBox="0 0 80 60" style="overflow: visible;" id="s9-burst-svg"></svg>
+            </div>
+            <div class="scene-desc">Concorrência sob controle e threads sincronizadas. O sistema opera de forma estável e segura.</div>
+          </div>
+        </div>
+
+        <!-- Partícula Central da Jornada -->
+        <div class="center-particle-wrapper" id="jornada-particle-wrapper">
+          <div class="center-particle" id="jornada-particle">
+            <div class="particle-electron" id="elec-1"></div>
+            <div class="particle-electron" id="elec-2"></div>
+            <div class="particle-electron" id="elec-3"></div>
+            <div class="particle-electron" id="elec-4"></div>
+            <div class="particle-electron" id="elec-5"></div>
+            <div class="particle-electron" id="elec-6"></div>
+            <div class="particle-electron" id="elec-7"></div>
+            <div class="particle-electron" id="elec-8"></div>
+          </div>
+        </div>
+
+        <div id="slide13-init-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin-bottom: 50px;">
+          <div style="font-size: 1.15rem; color: rgba(255,255,255,0.6); margin-top: 1rem;" id="s13-intro-txt">A história completa — do clique ao sistema estável.</div>
+          <button class="btn-jornada" id="btn-start-jornada" onclick="startJornadaTimeline()">▶ Iniciar jornada</button>
+        </div>
+
+        <!-- Linha da Timeline horizontal -->
+        <div class="timeline-track-dashed"></div>
+        <div class="timeline-track-drawn" id="timeline-track-drawn"></div>
+        
+        <!-- Pontos da Timeline -->
+        <div class="timeline-points-wrapper">
+          <div class="timeline-point" id="tp-1">
+            <div class="timeline-point-lbl">Clique</div>
+          </div>
+          <div class="timeline-point" id="tp-2">
+            <div class="timeline-point-lbl">Processo</div>
+          </div>
+          <div class="timeline-point" id="tp-3">
+            <div class="timeline-point-lbl">Threads</div>
+          </div>
+          <div class="timeline-point" id="tp-4">
+            <div class="timeline-point-lbl">Concorrência</div>
+          </div>
+          <div class="timeline-point" id="tp-5">
+            <div class="timeline-point-lbl">Disputa</div>
+          </div>
+          <div class="timeline-point" id="tp-6">
+            <div class="timeline-point-lbl">Sincronia</div>
+          </div>
+          <div class="timeline-point" id="tp-7">
+            <div class="timeline-point-lbl">Deadlock</div>
+          </div>
+          <div class="timeline-point" id="tp-8">
+            <div class="timeline-point-lbl">Salvaguarda</div>
+          </div>
+          <div class="timeline-point" id="tp-9">
+            <div class="timeline-point-lbl">Estável</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide13-footer-text" id="slide13-conclusion" style="position: absolute; bottom: 8%; left: 10%; right: 10%; text-align: center;">
+        "Entender  processos e threads não é só saber o que eles são — é entender a dança delicada que o sistema operacional orquestra a cada segundo para que seus programas funcionem."
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
